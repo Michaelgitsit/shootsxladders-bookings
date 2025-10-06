@@ -2,6 +2,8 @@
 
 This guide will help you set up the booking system with real-time availability tracking.
 
+<!-- Updated: Added database connection instructions -->
+
 ## 📋 Overview
 
 Your booking system now includes:
