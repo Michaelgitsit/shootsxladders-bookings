@@ -97,7 +97,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentMonth, setCurrentMonth] = useState<'november' | 'december'>('november');
   const [availableDates, setAvailableDates] = useState<DateOption[]>([]);
-  const [bookedSlots, setBookedSlots] = useState<Array<{ date: string; time: string }>>([]);
   const timeSlotsRef = useRef<HTMLElement>(null);
 
   // Fetch booked slots and update availability
@@ -108,8 +107,6 @@ export default function Home() {
         const data = await response.json();
         
         if (data.success) {
-          setBookedSlots(data.bookedSlots);
-          
           // Generate dates with updated availability
           const dates = baseDateConfigs.map(config => {
             const slots = generateTimeSlots(
