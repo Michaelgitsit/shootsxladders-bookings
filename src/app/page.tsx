@@ -113,6 +113,7 @@ export default function Home() {
   const [currentMonth, setCurrentMonth] = useState<'november' | 'december'>('november');
   const [availableDates, setAvailableDates] = useState<DateOption[]>(getInitialDates());
   const timeSlotsRef = useRef<HTMLElement>(null);
+  const bookButtonRef = useRef<HTMLDivElement>(null);
 
   // Fetch booked slots and update availability
   useEffect(() => {
@@ -182,6 +183,14 @@ export default function Home() {
 
   const handleTimeClick = (time: string) => {
     setSelectedTime(time);
+    
+    // Smooth scroll to book button after state updates
+    setTimeout(() => {
+      bookButtonRef.current?.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+    }, 100);
   };
 
   const handleBookNow = async () => {
@@ -535,7 +544,7 @@ export default function Home() {
 
           {/* Book Button */}
           {selectedTime && (
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div ref={bookButtonRef} className="animate-in fade-in slide-in-from-bottom-4 duration-700">
               <Button
                 onClick={handleBookNow}
                 disabled={isLoading}
