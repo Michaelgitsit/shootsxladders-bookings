@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -38,48 +38,56 @@ const generateTimeSlots = (startHour: number, startMinute: number, endHour: numb
   return slots;
 };
 
-const availableDates: DateOption[] = [
+// Base date configurations
+const baseDateConfigs = [
   {
     date: '8',
     fullDate: 'Saturday, November 8, 2025',
+    dateString: '2025-11-08',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+    startHour: 9, startMinute: 0, endHour: 19, endMinute: 0,
   },
   {
     date: '15',
     fullDate: 'Saturday, November 15, 2025',
+    dateString: '2025-11-15',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+    startHour: 9, startMinute: 0, endHour: 19, endMinute: 0,
   },
   {
     date: '22',
     fullDate: 'Saturday, November 22, 2025',
+    dateString: '2025-11-22',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+    startHour: 9, startMinute: 0, endHour: 19, endMinute: 0,
   },
   {
     date: '29',
     fullDate: 'Saturday, November 29, 2025',
+    dateString: '2025-11-29',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+    startHour: 9, startMinute: 0, endHour: 19, endMinute: 0,
   },
   {
     date: '5',
     fullDate: 'Friday, December 5, 2025',
+    dateString: '2025-12-05',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(11, 0, 21, 0), // 11:00 AM - 9:00 PM
+    startHour: 11, startMinute: 0, endHour: 21, endMinute: 0,
   },
   {
     date: '6',
     fullDate: 'Saturday, December 6, 2025',
+    dateString: '2025-12-06',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(11, 0, 21, 0), // 11:00 AM - 9:00 PM
+    startHour: 11, startMinute: 0, endHour: 21, endMinute: 0,
   },
   {
     date: '7',
     fullDate: 'Sunday, December 7, 2025',
+    dateString: '2025-12-07',
     location: '118 E 8th St, Georgetown, TX 78626',
-    timeSlots: generateTimeSlots(11, 0, 18, 0), // 11:00 AM - 6:00 PM
+    startHour: 11, startMinute: 0, endHour: 18, endMinute: 0,
   },
 ];
 
@@ -88,7 +96,68 @@ export default function Home() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentMonth, setCurrentMonth] = useState<'november' | 'december'>('november');
+  const [availableDates, setAvailableDates] = useState<DateOption[]>([]);
+  const [bookedSlots, setBookedSlots] = useState<Array<{ date: string; time: string }>>([]);
   const timeSlotsRef = useRef<HTMLElement>(null);
+
+  // Fetch booked slots and update availability
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      try {
+        const response = await fetch('/api/available-slots');
+        const data = await response.json();
+        
+        if (data.success) {
+          setBookedSlots(data.bookedSlots);
+          
+          // Generate dates with updated availability
+          const dates = baseDateConfigs.map(config => {
+            const slots = generateTimeSlots(
+              config.startHour, 
+              config.startMinute, 
+              config.endHour, 
+              config.endMinute
+            );
+            
+            // Mark slots as unavailable if they're booked
+            const updatedSlots = slots.map(slot => ({
+              ...slot,
+              available: !data.bookedSlots.some(
+                (booked: { date: string; time: string }) => 
+                  booked.date === config.dateString && booked.time === slot.time
+              ),
+            }));
+            
+            return {
+              date: config.date,
+              fullDate: config.fullDate,
+              location: config.location,
+              timeSlots: updatedSlots,
+            };
+          });
+          
+          setAvailableDates(dates);
+        }
+      } catch (error) {
+        console.error('Failed to fetch availability:', error);
+        // Fallback to all slots available
+        const dates = baseDateConfigs.map(config => ({
+          date: config.date,
+          fullDate: config.fullDate,
+          location: config.location,
+          timeSlots: generateTimeSlots(
+            config.startHour, 
+            config.startMinute, 
+            config.endHour, 
+            config.endMinute
+          ),
+        }));
+        setAvailableDates(dates);
+      }
+    };
+
+    fetchAvailability();
+  }, []);
 
   const handleDateClick = (index: number) => {
     setSelectedDateIndex(index);
@@ -119,6 +188,7 @@ export default function Home() {
     if (selectedDateIndex !== null && selectedTime) {
       setIsLoading(true);
       const selectedDate = availableDates[selectedDateIndex];
+      const dateConfig = baseDateConfigs[selectedDateIndex];
 
       try {
         // Create Stripe checkout session
@@ -128,7 +198,7 @@ export default function Home() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            date: selectedDate.fullDate,
+            date: dateConfig.dateString, // Use ISO date format for database
             time: selectedTime,
             location: selectedDate.location,
           }),
