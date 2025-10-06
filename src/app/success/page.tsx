@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import Link from 'next/link';
@@ -47,7 +46,7 @@ export default function SuccessPage() {
 
           <Card className="bg-[#F5F3ED] border-none p-6 rounded-2xl mb-8 text-left">
             <h3 className="font-serif text-xl text-[#2C2C2C] mb-4 font-medium">
-              What's Next?
+              What&apos;s Next?
             </h3>
             <ul className="space-y-3 text-[#6B6B6B]">
               <li className="flex items-start gap-3">

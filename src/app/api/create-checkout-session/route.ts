@@ -28,9 +28,10 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ url: session.url });
-  } catch (err: any) {
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An error occurred';
     return NextResponse.json(
-      { error: err.message },
+      { error: errorMessage },
       { status: 500 }
     );
   }
