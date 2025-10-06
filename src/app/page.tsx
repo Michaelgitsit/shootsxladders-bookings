@@ -149,9 +149,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
-      <div className="max-w-[480px] mx-auto px-6 py-6">
+      <div className="max-w-[480px] mx-auto px-6 py-4">
         {/* Header */}
-        <header className="text-center mb-10 pb-6 border-b border-[#E5E3DC] relative">
+        <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC] relative">
           <h1 className="text-base tracking-[0.2em] text-[#2C2C2C] font-light uppercase">
             Shoots & Ladders
           </h1>
@@ -166,16 +166,16 @@ export default function Home() {
 
         {/* Main content */}
         <main>
-          <h2 className="font-serif text-5xl text-[#2C2C2C] font-light leading-tight mb-4">
+          <h2 className="font-serif text-4xl text-[#2C2C2C] font-light leading-tight mb-2">
             Holiday Family<br />Portraits
           </h2>
-          <p className="text-[#6B6B6B] text-[15px] leading-relaxed font-light mb-8">
+          <p className="text-[#6B6B6B] text-[15px] leading-relaxed font-light mb-5">
             Select a date and time slot to book your session.
           </p>
 
           {/* Calendar Section */}
-          <section className="mb-8">
-            <h3 className="font-serif text-[28px] text-[#2C2C2C] mb-5 font-medium">
+          <section className="mb-5">
+            <h3 className="font-serif text-[24px] text-[#2C2C2C] mb-3 font-medium">
               Available Dates
             </h3>
             
@@ -401,13 +401,13 @@ export default function Home() {
 
           {/* Time Slots Section */}
           {selectedDate && (
-            <section ref={timeSlotsRef} className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <Card className="bg-[#F5F3ED] border-none p-6 rounded-2xl">
-                <h3 className="font-serif text-[22px] text-[#2C2C2C] mb-5 font-medium">
+            <section ref={timeSlotsRef} className="mb-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <Card className="bg-[#F5F3ED] border-none p-4 rounded-2xl">
+                <h3 className="font-serif text-[20px] text-[#2C2C2C] mb-3 font-medium">
                   {selectedDate.fullDate}
                 </h3>
                 
-                <div className="max-h-[400px] overflow-y-auto pr-2">
+                <div className="max-h-[350px] overflow-y-auto pr-2">
                   <div className="grid grid-cols-3 gap-2">
                     {selectedDate.timeSlots.map((slot) => (
                       <button
@@ -436,11 +436,11 @@ export default function Home() {
 
           {/* Location Section */}
           {selectedDate && (
-            <section className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h3 className="font-serif text-[26px] text-[#2C2C2C] mb-4 font-medium">
+            <section className="mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h3 className="font-serif text-[22px] text-[#2C2C2C] mb-3 font-medium">
                 Location
               </h3>
-              <Card className="bg-[#F5F3ED] border-none p-5 rounded-xl">
+              <Card className="bg-[#F5F3ED] border-none p-4 rounded-xl">
                 <p className="text-[16px] text-[#2C2C2C] leading-relaxed">
                   {selectedDate.location.split(', ').map((line, i, arr) => (
                     <span key={i}>
@@ -459,7 +459,7 @@ export default function Home() {
               <Button
                 onClick={handleBookNow}
                 disabled={isLoading}
-                className="w-full py-6 bg-[#D4C5A9] hover:bg-[#C4B599] text-[#2C2C2C] text-base font-medium tracking-wider rounded-xl transition-all hover:shadow-lg mb-16 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full py-5 bg-[#D4C5A9] hover:bg-[#C4B599] text-[#2C2C2C] text-base font-medium tracking-wider rounded-xl transition-all hover:shadow-lg mb-8 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isLoading ? 'Processing...' : 'Book Now'}
               </Button>
