@@ -184,13 +184,13 @@ export default function Home() {
   const handleTimeClick = (time: string) => {
     setSelectedTime(time);
     
-    // Smooth scroll to book button after state updates
+    // Smooth scroll to book button after it renders
     setTimeout(() => {
       bookButtonRef.current?.scrollIntoView({ 
         behavior: 'smooth', 
         block: 'center' 
       });
-    }, 100);
+    }, 350);
   };
 
   const handleBookNow = async () => {
