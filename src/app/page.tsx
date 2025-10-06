@@ -91,12 +91,27 @@ const baseDateConfigs = [
   },
 ];
 
+// Initialize dates with all slots available
+const getInitialDates = (): DateOption[] => {
+  return baseDateConfigs.map(config => ({
+    date: config.date,
+    fullDate: config.fullDate,
+    location: config.location,
+    timeSlots: generateTimeSlots(
+      config.startHour, 
+      config.startMinute, 
+      config.endHour, 
+      config.endMinute
+    ),
+  }));
+};
+
 export default function Home() {
   const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [currentMonth, setCurrentMonth] = useState<'november' | 'december'>('november');
-  const [availableDates, setAvailableDates] = useState<DateOption[]>([]);
+  const [availableDates, setAvailableDates] = useState<DateOption[]>(getInitialDates());
   const timeSlotsRef = useRef<HTMLElement>(null);
 
   // Fetch booked slots and update availability
@@ -106,7 +121,7 @@ export default function Home() {
         const response = await fetch('/api/available-slots');
         const data = await response.json();
         
-        if (data.success) {
+        if (data.success && data.bookedSlots) {
           // Generate dates with updated availability
           const dates = baseDateConfigs.map(config => {
             const slots = generateTimeSlots(
@@ -137,19 +152,7 @@ export default function Home() {
         }
       } catch (error) {
         console.error('Failed to fetch availability:', error);
-        // Fallback to all slots available
-        const dates = baseDateConfigs.map(config => ({
-          date: config.date,
-          fullDate: config.fullDate,
-          location: config.location,
-          timeSlots: generateTimeSlots(
-            config.startHour, 
-            config.startMinute, 
-            config.endHour, 
-            config.endMinute
-          ),
-        }));
-        setAvailableDates(dates);
+        // Keep using the initial dates (all slots available)
       }
     };
 
