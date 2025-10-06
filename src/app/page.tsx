@@ -87,6 +87,7 @@ export default function Home() {
   const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState<'november' | 'december'>('november');
   const timeSlotsRef = useRef<HTMLElement>(null);
 
   const handleDateClick = (index: number) => {
@@ -100,6 +101,14 @@ export default function Home() {
         block: 'start' 
       });
     }, 100);
+  };
+
+  const handlePreviousMonth = () => {
+    setCurrentMonth('november');
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth('december');
   };
 
   const handleTimeClick = (time: string) => {
@@ -181,16 +190,27 @@ export default function Home() {
             
             <div className="mb-5">
               <div className="flex items-center justify-between mb-5">
-                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
+                <button 
+                  onClick={handlePreviousMonth}
+                  disabled={currentMonth === 'november'}
+                  className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
                   ‹
                 </button>
-                <h4 className="font-serif text-2xl text-[#2C2C2C] font-medium">November 2025</h4>
-                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
+                <h4 className="font-serif text-2xl text-[#2C2C2C] font-medium">
+                  {currentMonth === 'november' ? 'November 2025' : 'December 2025'}
+                </h4>
+                <button 
+                  onClick={handleNextMonth}
+                  disabled={currentMonth === 'december'}
+                  className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                >
                   ›
                 </button>
               </div>
               
-              {/* Calendar Grid */}
+              {/* November Calendar Grid */}
+              {currentMonth === 'november' && (
               <div className="grid grid-cols-7 gap-2">
                 {/* Day labels */}
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
@@ -308,21 +328,10 @@ export default function Home() {
                   30
                 </button>
               </div>
-            </div>
+              )}
 
-            {/* December 2025 Calendar */}
-            <div className="mb-5 mt-8">
-              <div className="flex items-center justify-between mb-5">
-                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
-                  ‹
-                </button>
-                <h4 className="font-serif text-2xl text-[#2C2C2C] font-medium">December 2025</h4>
-                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
-                  ›
-                </button>
-              </div>
-              
-              {/* Calendar Grid */}
+              {/* December Calendar Grid */}
+              {currentMonth === 'december' && (
               <div className="grid grid-cols-7 gap-2">
                 {/* Day labels */}
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
@@ -396,6 +405,7 @@ export default function Home() {
                   </button>
                 ))}
               </div>
+              )}
             </div>
           </section>
 
