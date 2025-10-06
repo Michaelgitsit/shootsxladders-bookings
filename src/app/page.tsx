@@ -1,103 +1,464 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+
+type TimeSlot = {
+  time: string;
+  available: boolean;
+};
+
+type DateOption = {
+  date: string;
+  fullDate: string;
+  location: string;
+  timeSlots: TimeSlot[];
+};
+
+// Generate time slots in 20-minute intervals with custom start/end times
+const generateTimeSlots = (startHour: number, startMinute: number, endHour: number, endMinute: number): TimeSlot[] => {
+  const slots: TimeSlot[] = [];
+  let hour = startHour;
+  let minute = startMinute;
+  
+  while (hour < endHour || (hour === endHour && minute <= endMinute)) {
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+    const time = `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
+    slots.push({ time, available: true });
+    
+    minute += 20;
+    if (minute >= 60) {
+      minute = 0;
+      hour++;
+    }
+  }
+  
+  return slots;
+};
+
+const availableDates: DateOption[] = [
+  {
+    date: '8',
+    fullDate: 'Saturday, November 8, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+  },
+  {
+    date: '15',
+    fullDate: 'Saturday, November 15, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+  },
+  {
+    date: '22',
+    fullDate: 'Saturday, November 22, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+  },
+  {
+    date: '29',
+    fullDate: 'Saturday, November 29, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(9, 0, 19, 0), // 9:00 AM - 7:00 PM
+  },
+  {
+    date: '5',
+    fullDate: 'Friday, December 5, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(11, 0, 21, 0), // 11:00 AM - 9:00 PM
+  },
+  {
+    date: '6',
+    fullDate: 'Saturday, December 6, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(11, 0, 21, 0), // 11:00 AM - 9:00 PM
+  },
+  {
+    date: '7',
+    fullDate: 'Sunday, December 7, 2025',
+    location: '118 E 8th St, Georgetown, TX 78626',
+    timeSlots: generateTimeSlots(11, 0, 18, 0), // 11:00 AM - 6:00 PM
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  const handleDateClick = (index: number) => {
+    setSelectedDateIndex(index);
+    setSelectedTime(null); // Reset time selection when date changes
+  };
+
+  const handleTimeClick = (time: string) => {
+    setSelectedTime(time);
+  };
+
+  const handleBookNow = async () => {
+    if (selectedDateIndex !== null && selectedTime) {
+      setIsLoading(true);
+      const selectedDate = availableDates[selectedDateIndex];
+
+      try {
+        // Create Stripe checkout session
+        const response = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            date: selectedDate.fullDate,
+            time: selectedTime,
+            location: selectedDate.location,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create checkout session');
+        }
+
+        // Redirect to Stripe Checkout using the URL
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+      } catch (error) {
+        console.error('Booking error:', error);
+        alert('Something went wrong. Please try again.');
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const selectedDate = selectedDateIndex !== null ? availableDates[selectedDateIndex] : null;
+
+  return (
+    <div className="min-h-screen bg-[#FAFAF8]">
+      <div className="max-w-[480px] mx-auto px-6 py-6">
+        {/* Header */}
+        <header className="text-center mb-10 pb-6 border-b border-[#E5E3DC] relative">
+          <h1 className="text-base tracking-[0.2em] text-[#2C2C2C] font-light uppercase">
+            Shoots & Ladders
+          </h1>
+          
+          {/* Hamburger menu */}
+          <button className="absolute top-0 right-0 flex flex-col gap-[5px] w-7 h-5">
+            <span className="w-full h-[2px] bg-[#2C2C2C]"></span>
+            <span className="w-full h-[2px] bg-[#2C2C2C]"></span>
+            <span className="w-full h-[2px] bg-[#2C2C2C]"></span>
+          </button>
+        </header>
+
+        {/* Main content */}
+        <main>
+          <h2 className="font-serif text-5xl text-[#2C2C2C] font-light leading-tight mb-4">
+            Holiday Family<br />Portraits
+          </h2>
+          <p className="text-[#6B6B6B] text-[15px] leading-relaxed font-light mb-8">
+            Select a date and time slot to book your session.
+          </p>
+
+          {/* Calendar Section */}
+          <section className="mb-8">
+            <h3 className="font-serif text-[28px] text-[#2C2C2C] mb-5 font-medium">
+              Available Dates
+            </h3>
+            
+            <div className="mb-5">
+              <div className="flex items-center justify-between mb-5">
+                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
+                  ‹
+                </button>
+                <h4 className="font-serif text-2xl text-[#2C2C2C] font-medium">November 2025</h4>
+                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
+                  ›
+                </button>
+              </div>
+              
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-2">
+                {/* Day labels */}
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                  <div key={i} className="text-center text-xs text-[#999] font-medium py-2">
+                    {day}
+                  </div>
+                ))}
+                
+                {/* Calendar days - November 2025 starts on Saturday */}
+                {/* Week 1: Empty days until Saturday Nov 1 */}
+                {['', '', '', '', '', '', '1'].map((day, i) => (
+                  day === '' ? (
+                    <div key={`empty-${i}`} className="aspect-square" />
+                  ) : (
+                    <button
+                      key={`disabled-${day}`}
+                      className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                      disabled
+                    >
+                      {day}
+                    </button>
+                  )
+                ))}
+                
+                {/* Week 2: 2-8 (Nov 8 available) */}
+                {[2, 3, 4, 5, 6, 7].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handleDateClick(0)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 0
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  8
+                </button>
+                
+                {/* Week 3: 9-15 (Nov 15 available) */}
+                {[9, 10, 11, 12, 13, 14].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handleDateClick(1)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 1
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  15
+                </button>
+                
+                {/* Week 4: 16-22 (Nov 22 available) */}
+                {[16, 17, 18, 19, 20, 21].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handleDateClick(2)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 2
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  22
+                </button>
+                
+                {/* Week 5: 23-29 (Nov 29 available) */}
+                {[23, 24, 25, 26, 27, 28].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handleDateClick(3)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 3
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  29
+                </button>
+                
+                {/* Week 6: 30 */}
+                <button
+                  key="disabled-30"
+                  className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                  disabled
+                >
+                  30
+                </button>
+              </div>
+            </div>
+
+            {/* December 2025 Calendar */}
+            <div className="mb-5 mt-8">
+              <div className="flex items-center justify-between mb-5">
+                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
+                  ‹
+                </button>
+                <h4 className="font-serif text-2xl text-[#2C2C2C] font-medium">December 2025</h4>
+                <button className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors">
+                  ›
+                </button>
+              </div>
+              
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-2">
+                {/* Day labels */}
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                  <div key={i} className="text-center text-xs text-[#999] font-medium py-2">
+                    {day}
+                  </div>
+                ))}
+                
+                {/* Calendar days - December 2025 starts on Monday */}
+                {/* Week 1: Empty Sunday, then 1-6 */}
+                <div className="aspect-square" />
+                {[1, 2, 3, 4].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+                <button
+                  onClick={() => handleDateClick(4)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 4
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  5
+                </button>
+                <button
+                  onClick={() => handleDateClick(5)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 5
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  6
+                </button>
+                
+                {/* Week 2: 7-13 (Dec 7 available) */}
+                <button
+                  onClick={() => handleDateClick(6)}
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                    selectedDateIndex === 6
+                      ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
+                      : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
+                  }`}
+                >
+                  7
+                </button>
+                {[8, 9, 10, 11, 12, 13].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+                
+                {/* Remaining days grayed out */}
+                {[14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].map((day) => (
+                  <button
+                    key={`disabled-${day}`}
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    disabled
+                  >
+                    {day}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Time Slots Section */}
+          {selectedDate && (
+            <section className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <Card className="bg-[#F5F3ED] border-none p-6 rounded-2xl">
+                <h3 className="font-serif text-[22px] text-[#2C2C2C] mb-5 font-medium">
+                  {selectedDate.fullDate}
+                </h3>
+                
+                <div className="max-h-[400px] overflow-y-auto pr-2">
+                  <div className="grid grid-cols-3 gap-2">
+                    {selectedDate.timeSlots.map((slot) => (
+                      <button
+                        key={slot.time}
+                        onClick={() => handleTimeClick(slot.time)}
+                        disabled={!slot.available}
+                        className={`p-3 rounded-xl text-center transition-all ${
+                          selectedTime === slot.time
+                            ? 'bg-[#D4C5A9] border-2 border-[#C4B599]'
+                            : 'bg-[#FAFAF8] border-2 border-transparent hover:border-[#D4C5A9]'
+                        } ${!slot.available ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        <div className="text-base font-medium text-[#2C2C2C] mb-1">
+                          {slot.time}
+                        </div>
+                        <div className="text-[11px] text-[#6B6B6B]">
+                          $20 deposit
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            </section>
+          )}
+
+          {/* Location Section */}
+          {selectedDate && (
+            <section className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <h3 className="font-serif text-[26px] text-[#2C2C2C] mb-4 font-medium">
+                Location
+              </h3>
+              <Card className="bg-[#F5F3ED] border-none p-5 rounded-xl">
+                <p className="text-[16px] text-[#2C2C2C] leading-relaxed">
+                  {selectedDate.location.split(', ').map((line, i, arr) => (
+                    <span key={i}>
+                      {line}
+                      {i < arr.length - 1 && <br />}
+                    </span>
+                  ))}
+                </p>
+              </Card>
+            </section>
+          )}
+
+          {/* Book Button */}
+          {selectedTime && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <Button
+                onClick={handleBookNow}
+                disabled={isLoading}
+                className="w-full py-6 bg-[#D4C5A9] hover:bg-[#C4B599] text-[#2C2C2C] text-base font-medium tracking-wider rounded-xl transition-all hover:shadow-lg mb-16 disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Processing...' : 'Book Now'}
+              </Button>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
