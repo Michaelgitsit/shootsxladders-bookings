@@ -16,7 +16,7 @@ type DateOption = {
   timeSlots: TimeSlot[];
 };
 
-// Generate time slots in 20-minute intervals with custom start/end times
+// Generate time slots in 25-minute intervals (20 min booking + 5 min gap) with custom start/end times
 const generateTimeSlots = (startHour: number, startMinute: number, endHour: number, endMinute: number): TimeSlot[] => {
   const slots: TimeSlot[] = [];
   let hour = startHour;
@@ -28,9 +28,9 @@ const generateTimeSlots = (startHour: number, startMinute: number, endHour: numb
     const time = `${displayHour}:${minute.toString().padStart(2, '0')} ${period}`;
     slots.push({ time, available: true });
     
-    minute += 20;
+    minute += 25;
     if (minute >= 60) {
-      minute = 0;
+      minute -= 60;
       hour++;
     }
   }
