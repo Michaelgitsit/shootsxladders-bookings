@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -87,10 +87,19 @@ export default function Home() {
   const [selectedDateIndex, setSelectedDateIndex] = useState<number | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const timeSlotsRef = useRef<HTMLElement>(null);
 
   const handleDateClick = (index: number) => {
     setSelectedDateIndex(index);
     setSelectedTime(null); // Reset time selection when date changes
+    
+    // Smooth scroll to time slots section after state updates
+    setTimeout(() => {
+      timeSlotsRef.current?.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }, 100);
   };
 
   const handleTimeClick = (time: string) => {
@@ -319,7 +328,7 @@ export default function Home() {
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
                   <div key={i} className="text-center text-xs text-[#999] font-medium py-2">
                     {day}
-                  </div>
+        </div>
                 ))}
                 
                 {/* Calendar days - December 2025 starts on Monday */}
@@ -392,7 +401,7 @@ export default function Home() {
 
           {/* Time Slots Section */}
           {selectedDate && (
-            <section className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <section ref={timeSlotsRef} className="mb-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
               <Card className="bg-[#F5F3ED] border-none p-6 rounded-2xl">
                 <h3 className="font-serif text-[22px] text-[#2C2C2C] mb-5 font-medium">
                   {selectedDate.fullDate}
