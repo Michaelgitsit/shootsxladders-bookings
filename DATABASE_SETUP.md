@@ -167,3 +167,4 @@ Your booking system is now live with:
 - ✅ Automatic slot management
 
 All time slots will now show as unavailable once they're booked and paid for!
+# Trigger deployment with dependency fix
