@@ -266,10 +266,10 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Desktop: Two-column layout, Mobile: Single column */}
-          <div className="lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-24 lg:items-start lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto">
+          {/* Desktop: Two-column layout when date selected, centered when not. Mobile: Single column */}
+          <div className={`${selectedDate ? 'lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-24 lg:items-start' : ''} lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto`}>
             {/* Left Column - Calendar Section */}
-            <div className="lg:sticky lg:top-8">
+            <div className={`${selectedDate ? 'lg:sticky lg:top-8' : 'lg:max-w-[600px] lg:mx-auto'}`}>
               <section className="mb-5 lg:mb-0">
                 <h3 className="font-serif text-[24px] lg:text-[36px] xl:text-[40px] text-[#2C2C2C] mb-3 lg:mb-8 font-medium">
                   Available Dates
