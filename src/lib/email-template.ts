@@ -168,7 +168,7 @@ export function getConfirmationEmailHtml(
           <ul>
             <li><strong>Session Duration:</strong> Your portrait session will last approximately 20 minutes</li>
             <li><strong>Arrive Early:</strong> Please arrive 5 minutes before your scheduled time</li>
-            <li><strong>Wardrobe:</strong> Coordinate outfits in complementary colors for the best results</li>
+            <li><strong>Wardrobe:</strong> Coordinate outfits however you would like! For best results, be creative and have fun!</li>
             <li><strong>Photo Delivery:</strong> Your professionally edited photos will be available within 7-10 business days</li>
           </ul>
         </div>
@@ -179,8 +179,8 @@ export function getConfirmationEmailHtml(
         <h3 class="section-title">Preparation Tips</h3>
         <div class="section-content">
           <ul>
-            <li>Choose outfits that make you feel confident and comfortable</li>
-            <li>Avoid overly busy patterns or matching outfits</li>
+            <li>Choose outfits that match the theme</li>
+            <li>Avoid overly busy patterns</li>
             <li>Bring any props or accessories you'd like to include</li>
             <li>Well-rested children photograph best—schedule accordingly!</li>
           </ul>
@@ -239,12 +239,12 @@ Location: ${location}
 WHAT TO EXPECT
 - Session Duration: Your portrait session will last approximately 20 minutes
 - Arrive Early: Please arrive 5 minutes before your scheduled time
-- Wardrobe: Coordinate outfits in complementary colors for the best results
+- Wardrobe: Coordinate outfits however you would like! For best results, be creative and have fun!
 - Photo Delivery: Your professionally edited photos will be available within 7-10 business days
 
 PREPARATION TIPS
-- Choose outfits that make you feel confident and comfortable
-- Avoid overly busy patterns or matching outfits
+- Choose outfits that match the theme
+- Avoid overly busy patterns
 - Bring any props or accessories you'd like to include
 - Well-rested children photograph best—schedule accordingly!
 

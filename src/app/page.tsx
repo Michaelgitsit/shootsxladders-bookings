@@ -239,17 +239,12 @@ export default function Home() {
     <div className="min-h-screen bg-[#FAFAF8]">
       <div className="max-w-[480px] mx-auto px-6 py-4">
         {/* Header */}
-        <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC] relative">
-          <h1 className="text-base tracking-[0.2em] text-[#2C2C2C] font-light uppercase">
-            Shoots & Ladders
-          </h1>
-          
-          {/* Hamburger menu */}
-          <button className="absolute top-0 right-0 flex flex-col gap-[5px] w-7 h-5">
-            <span className="w-full h-[2px] bg-[#2C2C2C]"></span>
-            <span className="w-full h-[2px] bg-[#2C2C2C]"></span>
-            <span className="w-full h-[2px] bg-[#2C2C2C]"></span>
-          </button>
+        <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC]">
+          <a href="https://shootsxladders.com" className="inline-block">
+            <h1 className="text-base tracking-[0.2em] text-[#2C2C2C] font-light uppercase hover:text-[#6B6B6B] transition-colors">
+              Shoots & Ladders
+            </h1>
+          </a>
         </header>
 
         {/* Main content */}
@@ -509,10 +504,10 @@ export default function Home() {
                             : 'bg-[#FAFAF8] border-2 border-transparent hover:border-[#D4C5A9]'
                         } ${!slot.available ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        <div className="text-base font-medium text-[#2C2C2C] mb-1">
+                        <div className={`text-base font-medium text-[#2C2C2C] mb-1 ${!slot.available ? 'line-through' : ''}`}>
                           {slot.time}
                         </div>
-                        <div className="text-[11px] text-[#6B6B6B]">
+                        <div className={`text-[11px] text-[#6B6B6B] ${!slot.available ? 'line-through' : ''}`}>
                           $20 deposit
                         </div>
                       </button>
