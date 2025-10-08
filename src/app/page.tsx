@@ -165,11 +165,14 @@ export default function Home() {
     setSelectedTime(null); // Reset time selection when date changes
     
     // Smooth scroll to time slots section after state updates
+    // On mobile only - desktop has side-by-side layout
     setTimeout(() => {
-      timeSlotsRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
+      if (window.innerWidth < 1024) { // lg breakpoint
+        timeSlotsRef.current?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
     }, 100);
   };
 
@@ -185,11 +188,14 @@ export default function Home() {
     setSelectedTime(time);
     
     // Smooth scroll to book button after it renders
+    // On mobile only - desktop has side-by-side layout
     setTimeout(() => {
-      bookButtonRef.current?.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'center' 
-      });
+      if (window.innerWidth < 1024) { // lg breakpoint
+        bookButtonRef.current?.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+      }
     }, 350);
   };
 
@@ -237,11 +243,11 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#FAFAF8]">
-      <div className="max-w-[480px] mx-auto px-6 py-4">
+      <div className="max-w-[480px] lg:max-w-[1400px] xl:max-w-[1600px] mx-auto px-6 lg:px-12 xl:px-16 py-4 lg:py-12">
         {/* Header */}
-        <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC]">
+        <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC] lg:mb-12 lg:pb-8">
           <a href="https://shootsxladders.com" className="inline-block">
-            <h1 className="text-base tracking-[0.2em] text-[#2C2C2C] font-light uppercase hover:text-[#6B6B6B] transition-colors">
+            <h1 className="text-base lg:text-lg tracking-[0.2em] text-[#2C2C2C] font-light uppercase hover:text-[#6B6B6B] transition-colors">
               Shoots & Ladders
             </h1>
           </a>
@@ -249,46 +255,53 @@ export default function Home() {
 
         {/* Main content */}
         <main>
-          <h2 className="font-serif text-4xl text-[#2C2C2C] font-light leading-tight mb-2">
-            Holiday Family<br />Portraits
-          </h2>
-          <p className="text-[#6B6B6B] text-[15px] leading-relaxed font-light mb-5">
-            Select a date and time slot to book your session.
-          </p>
+          {/* Title Section - Desktop centered, mobile left-aligned */}
+          <div className="lg:text-center mb-8 lg:mb-16">
+            <h2 className="font-serif text-4xl lg:text-6xl xl:text-7xl text-[#2C2C2C] font-light leading-tight mb-2 lg:mb-4">
+              Holiday Family<br className="lg:hidden" />{' '}
+              <span className="hidden lg:inline"><br /></span>Portraits
+            </h2>
+            <p className="text-[#6B6B6B] text-[15px] lg:text-xl leading-relaxed font-light mb-5">
+              Select a date and time slot to book your session.
+            </p>
+          </div>
 
-          {/* Calendar Section */}
-          <section className="mb-5">
-            <h3 className="font-serif text-[24px] text-[#2C2C2C] mb-3 font-medium">
-              Available Dates
-            </h3>
-            
-            <div className="mb-5">
-              <div className="flex items-center justify-between mb-5">
-                <button 
-                  onClick={handlePreviousMonth}
-                  disabled={currentMonth === 'november'}
-                  className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  ‹
-                </button>
-                <h4 className="font-serif text-2xl text-[#2C2C2C] font-medium">
-                  {currentMonth === 'november' ? 'November 2025' : 'December 2025'}
-                </h4>
-                <button 
-                  onClick={handleNextMonth}
-                  disabled={currentMonth === 'december'}
-                  className="w-9 h-9 flex items-center justify-center text-[#2C2C2C] text-2xl hover:bg-[#F5F3ED] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                >
-                  ›
-                </button>
-              </div>
+          {/* Desktop: Two-column layout, Mobile: Single column */}
+          <div className="lg:grid lg:grid-cols-2 lg:gap-16 xl:gap-24 lg:items-start lg:max-w-[1200px] xl:max-w-[1400px] lg:mx-auto">
+            {/* Left Column - Calendar Section */}
+            <div className="lg:sticky lg:top-8">
+              <section className="mb-5 lg:mb-0">
+                <h3 className="font-serif text-[24px] lg:text-[36px] xl:text-[40px] text-[#2C2C2C] mb-3 lg:mb-8 font-medium">
+                  Available Dates
+                </h3>
+                
+                <div className="mb-5">
+                  <div className="flex items-center justify-between mb-5 lg:mb-10">
+                    <button 
+                      onClick={handlePreviousMonth}
+                      disabled={currentMonth === 'november'}
+                      className="w-9 h-9 lg:w-14 lg:h-14 flex items-center justify-center text-[#2C2C2C] text-2xl lg:text-4xl hover:bg-[#F5F3ED] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      ‹
+                    </button>
+                    <h4 className="font-serif text-2xl lg:text-4xl xl:text-5xl text-[#2C2C2C] font-medium">
+                      {currentMonth === 'november' ? 'November 2025' : 'December 2025'}
+                    </h4>
+                    <button 
+                      onClick={handleNextMonth}
+                      disabled={currentMonth === 'december'}
+                      className="w-9 h-9 lg:w-14 lg:h-14 flex items-center justify-center text-[#2C2C2C] text-2xl lg:text-4xl hover:bg-[#F5F3ED] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      ›
+                    </button>
+                  </div>
               
               {/* November Calendar Grid */}
               {currentMonth === 'november' && (
-              <div className="grid grid-cols-7 gap-2">
+              <div className="grid grid-cols-7 gap-2 lg:gap-4">
                 {/* Day labels */}
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-                  <div key={i} className="text-center text-xs text-[#999] font-medium py-2">
+                  <div key={i} className="text-center text-xs lg:text-base xl:text-lg text-[#999] font-medium py-2 lg:py-3">
                     {day}
                   </div>
                 ))}
@@ -301,7 +314,7 @@ export default function Home() {
                   ) : (
                     <button
                       key={`disabled-${day}`}
-                      className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                      className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                       disabled
                     >
                       {day}
@@ -313,7 +326,7 @@ export default function Home() {
                 {[2, 3, 4, 5, 6, 7].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -321,7 +334,7 @@ export default function Home() {
                 ))}
                 <button
                   onClick={() => handleDateClick(0)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 0
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -334,7 +347,7 @@ export default function Home() {
                 {[9, 10, 11, 12, 13, 14].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -342,7 +355,7 @@ export default function Home() {
                 ))}
                 <button
                   onClick={() => handleDateClick(1)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 1
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -355,7 +368,7 @@ export default function Home() {
                 {[16, 17, 18, 19, 20, 21].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -363,7 +376,7 @@ export default function Home() {
                 ))}
                 <button
                   onClick={() => handleDateClick(2)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 2
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -376,7 +389,7 @@ export default function Home() {
                 {[23, 24, 25, 26, 27, 28].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -384,7 +397,7 @@ export default function Home() {
                 ))}
                 <button
                   onClick={() => handleDateClick(3)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 3
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -396,7 +409,7 @@ export default function Home() {
                 {/* Week 6: 30 */}
                 <button
                   key="disabled-30"
-                  className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                  className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                   disabled
                 >
                   30
@@ -406,12 +419,12 @@ export default function Home() {
 
               {/* December Calendar Grid */}
               {currentMonth === 'december' && (
-              <div className="grid grid-cols-7 gap-2">
+              <div className="grid grid-cols-7 gap-2 lg:gap-4">
                 {/* Day labels */}
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
-                  <div key={i} className="text-center text-xs text-[#999] font-medium py-2">
+                  <div key={i} className="text-center text-xs lg:text-base xl:text-lg text-[#999] font-medium py-2 lg:py-3">
                     {day}
-        </div>
+                  </div>
                 ))}
                 
                 {/* Calendar days - December 2025 starts on Monday */}
@@ -420,7 +433,7 @@ export default function Home() {
                 {[1, 2, 3, 4].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -428,7 +441,7 @@ export default function Home() {
                 ))}
                 <button
                   onClick={() => handleDateClick(4)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 4
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -438,7 +451,7 @@ export default function Home() {
                 </button>
                 <button
                   onClick={() => handleDateClick(5)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 5
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -450,7 +463,7 @@ export default function Home() {
                 {/* Week 2: 7-13 (Dec 7 available) */}
                 <button
                   onClick={() => handleDateClick(6)}
-                  className={`aspect-square flex items-center justify-center rounded-lg text-base font-medium transition-all ${
+                  className={`aspect-square flex items-center justify-center rounded-lg text-base lg:text-xl xl:text-2xl font-medium transition-all ${
                     selectedDateIndex === 6
                       ? 'bg-[#D4C5A9] text-[#2C2C2C] shadow-md'
                       : 'bg-[#F0EDE4] text-[#2C2C2C] hover:bg-[#E8E3D6]'
@@ -461,7 +474,7 @@ export default function Home() {
                 {[8, 9, 10, 11, 12, 13].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -472,7 +485,7 @@ export default function Home() {
                 {[14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].map((day) => (
                   <button
                     key={`disabled-${day}`}
-                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base"
+                    className="aspect-square flex items-center justify-center rounded-lg text-[#D4D4D4] text-base lg:text-xl xl:text-2xl"
                     disabled
                   >
                     {day}
@@ -480,75 +493,81 @@ export default function Home() {
                 ))}
               </div>
               )}
+              </div>
             </div>
-          </section>
+              </section>
+            </div>
 
-          {/* Time Slots Section */}
-          {selectedDate && (
-            <section ref={timeSlotsRef} className="mb-4 animate-in fade-in slide-in-from-bottom-4 duration-300">
-              <Card className="bg-[#F5F3ED] border-none p-4 rounded-2xl">
-                <h3 className="font-serif text-[20px] text-[#2C2C2C] mb-3 font-medium">
-                  {selectedDate.fullDate}
-                </h3>
-                
-                <div className="max-h-[350px] overflow-y-auto pr-2">
-                  <div className="grid grid-cols-3 gap-2">
-                    {selectedDate.timeSlots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        onClick={() => handleTimeClick(slot.time)}
-                        disabled={!slot.available}
-                        className={`p-3 rounded-xl text-center transition-all ${
-                          selectedTime === slot.time
-                            ? 'bg-[#D4C5A9] border-2 border-[#C4B599]'
-                            : 'bg-[#FAFAF8] border-2 border-transparent hover:border-[#D4C5A9]'
-                        } ${!slot.available ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        <div className={`text-base font-medium text-[#2C2C2C] mb-1 ${!slot.available ? 'line-through' : ''}`}>
-                          {slot.time}
-                        </div>
-                        <div className={`text-[11px] text-[#6B6B6B] ${!slot.available ? 'line-through' : ''}`}>
-                          $20 deposit
-                        </div>
-                      </button>
-                    ))}
-                  </div>
+            {/* Right Column - Time Slots, Location, and Book Button */}
+            <div className="lg:space-y-8">
+              {/* Time Slots Section */}
+              {selectedDate && (
+                <section ref={timeSlotsRef} className="mb-4 lg:mb-0 animate-in fade-in slide-in-from-bottom-4 duration-300">
+                  <Card className="bg-[#F5F3ED] border-none p-4 lg:p-8 xl:p-10 rounded-2xl">
+                    <h3 className="font-serif text-[20px] lg:text-[32px] xl:text-[36px] text-[#2C2C2C] mb-3 lg:mb-6 font-medium">
+                      {selectedDate.fullDate}
+                    </h3>
+                    
+                    <div className="max-h-[350px] lg:max-h-[600px] overflow-y-auto pr-2">
+                      <div className="grid grid-cols-3 gap-2 lg:gap-4">
+                        {selectedDate.timeSlots.map((slot) => (
+                          <button
+                            key={slot.time}
+                            onClick={() => handleTimeClick(slot.time)}
+                            disabled={!slot.available}
+                            className={`p-3 lg:p-5 xl:p-6 rounded-xl text-center transition-all ${
+                              selectedTime === slot.time
+                                ? 'bg-[#D4C5A9] border-2 border-[#C4B599]'
+                                : 'bg-[#FAFAF8] border-2 border-transparent hover:border-[#D4C5A9]'
+                            } ${!slot.available ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          >
+                            <div className={`text-base lg:text-xl xl:text-2xl font-medium text-[#2C2C2C] mb-1 ${!slot.available ? 'line-through' : ''}`}>
+                              {slot.time}
+                            </div>
+                            <div className={`text-[11px] lg:text-sm xl:text-base text-[#6B6B6B] ${!slot.available ? 'line-through' : ''}`}>
+                              $20 deposit
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </Card>
+                </section>
+              )}
+
+              {/* Location Section */}
+              {selectedDate && (
+                <section className="mb-4 lg:mb-0 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <h3 className="font-serif text-[22px] lg:text-[32px] xl:text-[36px] text-[#2C2C2C] mb-3 lg:mb-5 font-medium">
+                    Location
+                  </h3>
+                  <Card className="bg-[#F5F3ED] border-none p-4 lg:p-8 xl:p-10 rounded-xl">
+                    <p className="text-[16px] lg:text-xl xl:text-2xl text-[#2C2C2C] leading-relaxed">
+                      {selectedDate.location.split(', ').map((line, i, arr) => (
+                        <span key={i}>
+                          {line}
+                          {i < arr.length - 1 && <br />}
+                        </span>
+                      ))}
+                    </p>
+                  </Card>
+                </section>
+              )}
+
+              {/* Book Button */}
+              {selectedTime && (
+                <div ref={bookButtonRef} className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+                  <Button
+                    onClick={handleBookNow}
+                    disabled={isLoading}
+                    className="w-full py-5 lg:py-7 xl:py-8 bg-[#D4C5A9] hover:bg-[#C4B599] text-[#2C2C2C] text-base lg:text-xl xl:text-2xl font-medium tracking-wider rounded-xl transition-all hover:shadow-lg mb-8 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isLoading ? 'Processing...' : 'Book Now'}
+                  </Button>
                 </div>
-              </Card>
-            </section>
-          )}
-
-          {/* Location Section */}
-          {selectedDate && (
-            <section className="mb-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h3 className="font-serif text-[22px] text-[#2C2C2C] mb-3 font-medium">
-                Location
-              </h3>
-              <Card className="bg-[#F5F3ED] border-none p-4 rounded-xl">
-                <p className="text-[16px] text-[#2C2C2C] leading-relaxed">
-                  {selectedDate.location.split(', ').map((line, i, arr) => (
-                    <span key={i}>
-                      {line}
-                      {i < arr.length - 1 && <br />}
-                    </span>
-                  ))}
-                </p>
-              </Card>
-            </section>
-          )}
-
-          {/* Book Button */}
-          {selectedTime && (
-            <div ref={bookButtonRef} className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <Button
-                onClick={handleBookNow}
-                disabled={isLoading}
-                className="w-full py-5 bg-[#D4C5A9] hover:bg-[#C4B599] text-[#2C2C2C] text-base font-medium tracking-wider rounded-xl transition-all hover:shadow-lg mb-8 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {isLoading ? 'Processing...' : 'Book Now'}
-              </Button>
+              )}
             </div>
-          )}
+          </div>
         </main>
       </div>
     </div>
