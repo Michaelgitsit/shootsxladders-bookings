@@ -1,59 +1,66 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { sql } from '@vercel/postgres';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-09-30.clover',
 });
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
-    const { date, time, location, customerName, customerEmail, customerPhone } = body;
+    const { date, time, location } = await req.json();
 
-    // Validate required fields
-    if (!date || !time || !location) {
+    // Check if the slot is already booked
+    const existing = await sql`
+      SELECT id FROM bookings 
+      WHERE booking_date = ${date} 
+      AND booking_time = ${time}
+      AND payment_status = 'confirmed'
+    `;
+
+    if (existing.rows.length > 0) {
       return NextResponse.json(
-        { error: 'Missing required booking information' },
+        { error: 'This time slot has already been booked' },
         { status: 400 }
       );
     }
-
-    // Get the protocol and host for the success/cancel URLs
-    const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
-    const host = request.headers.get('host') || 'buy.shootsxladders.com';
-    const baseUrl = `${protocol}://${host}`;
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID,
+          price: process.env.STRIPE_PRICE_ID!,
           quantity: 1,
         },
       ],
       mode: 'payment',
-      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}?canceled=true`,
+      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get('origin')}?canceled=true`,
       metadata: {
         date,
         time,
         location,
-        customerName: customerName || '',
-        customerEmail: customerEmail || '',
-        customerPhone: customerPhone || '',
       },
-      customer_email: customerEmail || undefined,
     });
 
-    return NextResponse.json({ sessionId: session.id, url: session.url });
-  } catch (error: unknown) {
-    console.error('Error creating checkout session:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
+    // Save booking with pending status
+    await sql`
+      INSERT INTO bookings (booking_date, booking_time, location, stripe_session_id, payment_status)
+      VALUES (${date}, ${time}, ${location}, ${session.id}, 'pending')
+      ON CONFLICT (booking_date, booking_time) 
+      DO UPDATE SET 
+        stripe_session_id = ${session.id},
+        payment_status = 'pending',
+        created_at = CURRENT_TIMESTAMP
+    `;
+
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    const errorMessage = err instanceof Error ? err.message : 'An error occurred';
     return NextResponse.json(
       { error: errorMessage },
       { status: 500 }
     );
   }
 }
-
