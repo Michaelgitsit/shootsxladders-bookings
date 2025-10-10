@@ -58,6 +58,62 @@ export default function AdminPage() {
     });
   };
 
+  const exportToCSV = (dateFilter?: string) => {
+    let filteredBookings = bookingsWithCompany;
+    
+    if (dateFilter) {
+      filteredBookings = bookingsWithCompany.filter(booking => booking.booking_date === dateFilter);
+    }
+
+    // Sort by time
+    filteredBookings.sort((a, b) => {
+      const timeA = a.booking_time;
+      const timeB = b.booking_time;
+      return timeA.localeCompare(timeB);
+    });
+
+    // Create CSV content
+    const headers = ['Date', 'Time', 'Customer Name', 'Email', 'Company', 'Location', 'Status', 'Booked On'];
+    const csvContent = [
+      headers.join(','),
+      ...filteredBookings.map(booking => [
+        formatDate(booking.booking_date),
+        booking.booking_time,
+        `"${booking.customer_name || ''}"`,
+        `"${booking.customer_email || ''}"`,
+        `"${(booking as any).company || ''}"`,
+        `"${booking.location}"`,
+        booking.payment_status,
+        formatDateTime(booking.created_at)
+      ].join(','))
+    ].join('\n');
+
+    // Download CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    
+    const filename = dateFilter 
+      ? `bookings-${dateFilter}.csv`
+      : `all-bookings-${new Date().toISOString().split('T')[0]}.csv`;
+    
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Get unique dates for filtering
+  const availableDates = [...new Set(bookingsWithCompany.map(booking => booking.booking_date))].sort();
+
+  // Add company field to bookings if missing (for backwards compatibility)
+  const bookingsWithCompany = bookings.map(booking => ({
+    ...booking,
+    company: (booking as any).company || ''
+  }));
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FAFAF8] flex items-center justify-center">
@@ -82,22 +138,64 @@ export default function AdminPage() {
         </h1>
         
         <div className="mb-6">
-          <div className="text-lg text-[#6B6B6B]">
-            Total Bookings: <span className="font-medium text-[#2C2C2C]">{bookings.length}</span>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div className="text-lg text-[#6B6B6B]">
+              Total Bookings: <span className="font-medium text-[#2C2C2C]">{bookingsWithCompany.length}</span>
+            </div>
+            <div className="text-lg text-[#6B6B6B]">
+              Confirmed: <span className="font-medium text-green-600">
+                {bookingsWithCompany.filter(b => b.payment_status === 'confirmed').length}
+              </span>
+            </div>
+            <div className="text-lg text-[#6B6B6B]">
+              Pending: <span className="font-medium text-orange-600">
+                {bookingsWithCompany.filter(b => b.payment_status === 'pending').length}
+              </span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => exportToCSV()}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                📊 Export All
+              </button>
+            </div>
           </div>
-          <div className="text-lg text-[#6B6B6B]">
-            Confirmed: <span className="font-medium text-green-600">
-              {bookings.filter(b => b.payment_status === 'confirmed').length}
-            </span>
-          </div>
-          <div className="text-lg text-[#6B6B6B]">
-            Pending: <span className="font-medium text-orange-600">
-              {bookings.filter(b => b.payment_status === 'pending').length}
-            </span>
-          </div>
+
+          {/* Date Filter and Export */}
+          {availableDates.length > 0 && (
+            <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+              <h3 className="font-medium text-[#2C2C2C] mb-3">Export by Date:</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {availableDates.map(date => {
+                  const dateBookings = bookingsWithCompany.filter(b => b.booking_date === date);
+                  const confirmedCount = dateBookings.filter(b => b.payment_status === 'confirmed').length;
+                  const pendingCount = dateBookings.filter(b => b.payment_status === 'pending').length;
+                  
+                  return (
+                    <button
+                      key={date}
+                      onClick={() => exportToCSV(date)}
+                      className="text-left p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border transition-colors"
+                    >
+                      <div className="font-medium text-[#2C2C2C] text-sm">
+                        {formatDate(date)}
+                      </div>
+                      <div className="text-xs text-[#6B6B6B] mt-1">
+                        {confirmedCount} confirmed, {pendingCount} pending
+                      </div>
+                      <div className="text-xs text-blue-600 mt-1">
+                        📥 Export CSV
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
-        {bookings.length === 0 ? (
+        {bookingsWithCompany.length === 0 ? (
           <Card className="p-8 text-center">
             <p className="text-[#6B6B6B] text-lg">No bookings yet</p>
           </Card>
