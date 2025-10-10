@@ -93,7 +93,7 @@ export default function EmailPreviewPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-sm text-gray-600">To: {sampleBooking.customerEmail}</div>
-                  <div className="text-sm text-gray-600">From: Shoots & Ladders &lt;bookings@shootsxladders.com&gt;</div>
+                  <div className="text-sm text-gray-600">From: Shoots &amp; Ladders &lt;bookings@shootsxladders.com&gt;</div>
                 </div>
                 <div className="text-sm text-gray-600">📧</div>
               </div>
@@ -116,7 +116,7 @@ export default function EmailPreviewPage() {
                 </p>
                 
                 <p className="text-gray-700 mb-6">
-                  Thank you for booking with Shoots & Ladders! We're excited to capture your holiday memories.
+                  Thank you for booking with Shoots &amp; Ladders! We&apos;re excited to capture your holiday memories.
                 </p>
 
                 <div className="mb-6">
@@ -145,12 +145,12 @@ export default function EmailPreviewPage() {
                 </div>
 
                 <p className="text-gray-700 mb-4">
-                  We can't wait to work with you!
+                  We can&apos;t wait to work with you!
                 </p>
 
                 <p className="text-gray-700">
                   Best regards,<br />
-                  The Shoots & Ladders Team
+                  The Shoots &amp; Ladders Team
                 </p>
               </div>
             </div>

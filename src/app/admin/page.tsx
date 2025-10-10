@@ -29,7 +29,7 @@ export default function AdminPage() {
         } else {
           setError('Failed to fetch bookings');
         }
-      } catch (err) {
+      } catch {
         setError('Error fetching bookings');
       } finally {
         setLoading(false);
