@@ -18,7 +18,7 @@ export default function EmailPreviewPage() {
         
         <div className="mb-6">
           <h2 className="text-xl text-[#6B6B6B] mb-2">Business Owner Notification Email</h2>
-          <p className="text-[#6B6B6B]">This is what you'll receive when a customer books a session</p>
+          <p className="text-[#6B6B6B]">This is what you&apos;ll receive when a customer books a session</p>
         </div>
 
         {/* Email Preview */}
