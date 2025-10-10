@@ -94,6 +94,38 @@ export async function POST(req: NextRequest) {
           console.error('Failed to send confirmation email:', emailError);
           // Don't fail the webhook if email fails
         }
+
+        // Send notification email to business owner
+        try {
+          await resend.emails.send({
+            from: 'Shoots & Ladders <bookings@shootsxladders.com>',
+            to: ['shootsandladders@gmail.com'],
+            subject: `🎉 New Booking Confirmed - ${formattedDate} at ${booking.booking_time}`,
+            html: `
+              <h2>New Booking Confirmed! 🎉</h2>
+              <p>A customer has successfully booked a photography session.</p>
+              
+              <h3>Customer Details:</h3>
+              <p><strong>Name:</strong> ${booking.customer_name || 'Not provided'}</p>
+              <p><strong>Email:</strong> ${booking.customer_email}</p>
+              
+              <h3>Session Details:</h3>
+              <p><strong>Date:</strong> ${formattedDate}</p>
+              <p><strong>Time:</strong> ${booking.booking_time}</p>
+              <p><strong>Location:</strong> ${booking.location}</p>
+              
+              <p><strong>Payment Status:</strong> ✅ Confirmed</p>
+              
+              <hr>
+              <p><small>This booking was automatically confirmed after successful payment processing.</small></p>
+            `,
+          });
+
+          console.log(`Notification email sent to business owner`);
+        } catch (notificationError) {
+          console.error('Failed to send notification email:', notificationError);
+          // Don't fail the webhook if notification fails
+        }
       }
     }
 
