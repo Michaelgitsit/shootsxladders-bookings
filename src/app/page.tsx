@@ -242,9 +242,9 @@ export default function Home() {
         <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC]">
           <a href="https://shootsxladders.com" className="inline-block">
             <img 
-              src="/images/hero-logo.png" 
+              src="/images/LOGOTRANSPARENCY2.png" 
               alt="Shoots & Ladders - Elevated Event Portraits" 
-              className="h-16 mx-auto hover:opacity-80 transition-opacity"
+              className="h-20 mx-auto hover:opacity-80 transition-opacity"
             />
           </a>
         </header>
