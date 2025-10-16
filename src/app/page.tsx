@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
 type TimeSlot = {
   time: string;
@@ -241,9 +242,11 @@ export default function Home() {
         {/* Header */}
         <header className="text-center mb-6 pb-4 border-b border-[#E5E3DC]">
           <a href="https://shootsxladders.com" className="inline-block">
-            <img 
+            <Image 
               src="/images/LOGOTRANSPARENCY2.png" 
               alt="Shoots & Ladders - Elevated Event Portraits" 
+              width={200}
+              height={80}
               className="h-20 mx-auto hover:opacity-80 transition-opacity"
             />
           </a>

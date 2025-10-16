@@ -81,7 +81,7 @@ export default function AdminPage() {
         booking.booking_time,
         `"${booking.customer_name || ''}"`,
         `"${booking.customer_email || ''}"`,
-        `"${(booking as any).company || ''}"`,
+        `"${(booking as { company?: string }).company || ''}"`,
         `"${booking.location}"`,
         booking.payment_status,
         formatDateTime(booking.created_at)
@@ -111,7 +111,7 @@ export default function AdminPage() {
   // Add company field to bookings if missing (for backwards compatibility)
   const bookingsWithCompany = bookings.map(booking => ({
     ...booking,
-    company: (booking as any).company || ''
+    company: (booking as { company?: string }).company || ''
   }));
 
   if (loading) {
