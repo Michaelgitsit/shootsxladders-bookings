@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 import { getConfirmationEmailHtml, getConfirmationEmailText } from '@/lib/email-template';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-09-30.clover',
+  apiVersion: '2024-06-20',
 });
 
 const resend = new Resend(process.env.RESEND_API_KEY);
