@@ -105,14 +105,14 @@ export default function AdminPage() {
     document.body.removeChild(link);
   };
 
-  // Get unique dates for filtering
-  const availableDates = [...new Set(bookingsWithCompany.map(booking => booking.booking_date))].sort();
-
   // Add company field to bookings if missing (for backwards compatibility)
   const bookingsWithCompany = bookings.map(booking => ({
     ...booking,
     company: (booking as { company?: string }).company || ''
   }));
+
+  // Get unique dates for filtering
+  const availableDates = [...new Set(bookingsWithCompany.map(booking => booking.booking_date))].sort();
 
   if (loading) {
     return (
