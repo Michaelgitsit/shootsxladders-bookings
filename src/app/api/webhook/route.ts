@@ -4,9 +4,7 @@ import { sql } from '@vercel/postgres';
 import { Resend } from 'resend';
 import { getConfirmationEmailHtml, getConfirmationEmailText } from '@/lib/email-template';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
