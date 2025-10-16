@@ -21,27 +21,31 @@ export async function POST(request: NextRequest) {
       from: 'Shoots & Ladders <bookings@shootsxladders.com>',
       to: ['shoots.ladders.photo@gmail.com'],
       replyTo: email,
-      subject: `New Inquiry from ${name}`,
+      subject: `New Booking Inquiry from ${name}`,
       html: `
         <!DOCTYPE html>
         <html>
           <head>
             <meta charset="utf-8">
             <style>
-              body { font-family: Arial, sans-serif; line-height: 1.6; color: #2C2C2C; }
+              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #2C2C2C; margin: 0; padding: 0; background-color: #FAFAF8; }
               .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-              .header { background: #F5F3ED; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-              .content { background: white; padding: 30px; border: 1px solid #E5E3DC; }
-              .field { margin-bottom: 20px; }
-              .label { font-weight: bold; color: #6B6B6B; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
-              .value { color: #2C2C2C; font-size: 16px; margin-top: 5px; }
-              .footer { background: #F5F3ED; padding: 15px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px; color: #6B6B6B; }
+              .header { background: #F5F3ED; padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+              .content { background: white; padding: 40px 30px; border-left: 1px solid #E5E3DC; border-right: 1px solid #E5E3DC; }
+              .field { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #F5F3ED; }
+              .field:last-child { border-bottom: none; }
+              .label { font-weight: 600; color: #6B6B6B; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+              .value { color: #2C2C2C; font-size: 16px; line-height: 1.6; }
+              .value a { color: #D4C5A9; text-decoration: none; font-weight: 500; }
+              .footer { background: #F5F3ED; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 12px; color: #6B6B6B; border-top: 1px solid #E5E3DC; }
+              .footer p { margin: 5px 0; }
+              .title { margin: 0; color: #2C2C2C; font-size: 28px; font-weight: 300; letter-spacing: 3px; text-transform: uppercase; }
             </style>
           </head>
           <body>
             <div class="container">
               <div class="header">
-                <h1 style="margin: 0; color: #2C2C2C; font-size: 24px; font-weight: 300; letter-spacing: 2px;">New Contact Inquiry</h1>
+                <h1 class="title">New Booking Inquiry</h1>
               </div>
               <div class="content">
                 <div class="field">
@@ -51,7 +55,7 @@ export async function POST(request: NextRequest) {
                 
                 <div class="field">
                   <div class="label">Email</div>
-                  <div class="value"><a href="mailto:${email}" style="color: #D4C5A9; text-decoration: none;">${email}</a></div>
+                  <div class="value"><a href="mailto:${email}">${email}</a></div>
                 </div>
                 
                 ${company ? `
@@ -72,7 +76,8 @@ export async function POST(request: NextRequest) {
                 </div>
               </div>
               <div class="footer">
-                <p style="margin: 0;">Shoots & Ladders - Elevated Event Portraits</p>
+                <p style="margin: 0; font-weight: 500;">Shoots & Ladders</p>
+                <p style="margin: 5px 0 0 0; font-size: 11px; letter-spacing: 1px;">ELEVATED EVENT PORTRAITS</p>
               </div>
             </div>
           </body>
