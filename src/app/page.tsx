@@ -245,9 +245,10 @@ export default function Home() {
             <Image 
               src="/images/LOGOTRANSPARENCY2.png" 
               alt="Shoots & Ladders - Elevated Event Portraits" 
-              width={200}
-              height={80}
+              width={292}
+              height={200}
               className="h-20 mx-auto hover:opacity-80 transition-opacity"
+              style={{ objectFit: 'contain' }}
             />
           </a>
         </header>
