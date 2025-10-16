@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     // Send email notification to business
     const { error } = await resend.emails.send({
       from: 'Shoots & Ladders <bookings@shootsxladders.com>',
-      to: ['shootsandladders@gmail.com'], // Replace with your actual business email
+      to: ['shoots.ladders.photo@gmail.com'],
       replyTo: email,
       subject: `New Inquiry from ${name}`,
       html: `

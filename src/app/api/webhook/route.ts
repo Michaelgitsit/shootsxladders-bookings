@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
         try {
           await resend.emails.send({
             from: 'Shoots & Ladders <bookings@shootsxladders.com>',
-            to: ['shootsandladders@gmail.com'],
+            to: ['shoots.ladders.photo@gmail.com'],
             subject: `🎉 New Booking Confirmed - ${formattedDate} at ${booking.booking_time}`,
             html: `
               <h2>New Booking Confirmed! 🎉</h2>

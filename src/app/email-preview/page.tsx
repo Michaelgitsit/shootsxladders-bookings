@@ -27,7 +27,7 @@ export default function EmailPreviewPage() {
           <div className="bg-gray-50 border-b border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600">To: shootsandladders@gmail.com</div>
+                <div className="text-sm text-gray-600">To: shoots.ladders.photo@gmail.com</div>
                 <div className="text-sm text-gray-600">From: Shoots & Ladders &lt;bookings@shootsxladders.com&gt;</div>
               </div>
               <div className="text-sm text-gray-600">📧</div>
