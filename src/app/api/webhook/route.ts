@@ -102,22 +102,75 @@ export async function POST(req: NextRequest) {
             to: ['shoots.ladders.photo@gmail.com'],
             subject: `🎉 New Booking Confirmed - ${formattedDate} at ${booking.booking_time}`,
             html: `
-              <h2>New Booking Confirmed! 🎉</h2>
-              <p>A customer has successfully booked a photography session.</p>
-              
-              <h3>Customer Details:</h3>
-              <p><strong>Name:</strong> ${booking.customer_name || 'Not provided'}</p>
-              <p><strong>Email:</strong> ${booking.customer_email}</p>
-              
-              <h3>Session Details:</h3>
-              <p><strong>Date:</strong> ${formattedDate}</p>
-              <p><strong>Time:</strong> ${booking.booking_time}</p>
-              <p><strong>Location:</strong> ${booking.location}</p>
-              
-              <p><strong>Payment Status:</strong> ✅ Confirmed</p>
-              
-              <hr>
-              <p><small>This booking was automatically confirmed after successful payment processing.</small></p>
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta charset="utf-8">
+                  <style>
+                    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #2C2C2C; margin: 0; padding: 0; background-color: #FAFAF8; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background: linear-gradient(135deg, #D4C5A9 0%, #C4B599 100%); padding: 30px 20px; text-align: center; border-radius: 8px 8px 0 0; }
+                    .header-icon { font-size: 48px; margin-bottom: 10px; }
+                    .title { margin: 0; color: #2C2C2C; font-size: 28px; font-weight: 300; letter-spacing: 2px; text-transform: uppercase; }
+                    .content { background: white; padding: 40px 30px; border-left: 1px solid #E5E3DC; border-right: 1px solid #E5E3DC; }
+                    .section { margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid #F5F3ED; }
+                    .section:last-child { border-bottom: none; margin-bottom: 0; }
+                    .section-title { font-weight: 600; color: #2C2C2C; font-size: 14px; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 15px; }
+                    .field { margin: 12px 0; display: flex; align-items: baseline; }
+                    .field-label { font-weight: 600; color: #6B6B6B; font-size: 13px; min-width: 120px; }
+                    .field-value { color: #2C2C2C; font-size: 16px; }
+                    .status-badge { display: inline-block; background: #4CAF50; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-top: 10px; }
+                    .footer { background: #F5F3ED; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; font-size: 11px; color: #6B6B6B; border-top: 1px solid #E5E3DC; }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <div class="header">
+                      <div class="header-icon">🎉</div>
+                      <h1 class="title">New Booking!</h1>
+                    </div>
+                    <div class="content">
+                      <div class="section">
+                        <div class="section-title">Customer Information</div>
+                        <div class="field">
+                          <span class="field-label">Name:</span>
+                          <span class="field-value">${booking.customer_name || 'Not provided'}</span>
+                        </div>
+                        <div class="field">
+                          <span class="field-label">Email:</span>
+                          <span class="field-value"><a href="mailto:${booking.customer_email}" style="color: #D4C5A9; text-decoration: none;">${booking.customer_email}</a></span>
+                        </div>
+                      </div>
+                      
+                      <div class="section">
+                        <div class="section-title">Session Details</div>
+                        <div class="field">
+                          <span class="field-label">Date:</span>
+                          <span class="field-value">${formattedDate}</span>
+                        </div>
+                        <div class="field">
+                          <span class="field-label">Time:</span>
+                          <span class="field-value">${booking.booking_time}</span>
+                        </div>
+                        <div class="field">
+                          <span class="field-label">Location:</span>
+                          <span class="field-value">${booking.location}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="section">
+                        <div class="section-title">Payment Status</div>
+                        <span class="status-badge">✅ Payment Confirmed</span>
+                        <p style="margin-top: 15px; color: #6B6B6B; font-size: 14px;">Customer has paid the $20 deposit. Confirmation email has been sent automatically.</p>
+                      </div>
+                    </div>
+                    <div class="footer">
+                      <p style="margin: 0; font-weight: 500;">Shoots & Ladders</p>
+                      <p style="margin: 5px 0 0 0;">Automated booking notification</p>
+                    </div>
+                  </div>
+                </body>
+              </html>
             `,
           });
 
