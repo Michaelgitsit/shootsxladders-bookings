@@ -4,9 +4,6 @@ import { sql } from '@vercel/postgres';
 import { Resend } from 'resend';
 import { getConfirmationEmailHtml, getConfirmationEmailText } from '@/lib/email-template';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 // Helper function to format date for email
@@ -22,6 +19,9 @@ function formatDateForEmail(dateString: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    
     const body = await req.text();
     const signature = req.headers.get('stripe-signature');
 
